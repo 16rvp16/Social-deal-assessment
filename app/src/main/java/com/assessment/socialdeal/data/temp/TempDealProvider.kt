@@ -60,6 +60,8 @@ object TempDealProvider {
         ),
     )
 
+    val favoriteDeals = listOf(allDeals[0], allDeals[3])
+
     /**
      * Get an [Deal] with the given [Deal.unique].
      */
