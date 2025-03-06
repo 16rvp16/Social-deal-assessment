@@ -33,7 +33,8 @@ class DealViewModel : ViewModel() {
     fun updateCurrentDealCategory(dealCategory: DealCategory) {
         _uiState.update { dealUiState ->
             dealUiState.copy(
-                currentDealCategory = dealCategory
+                currentDealCategory = dealCategory,
+                currentSelectedDeal = null
             )
         }
     }

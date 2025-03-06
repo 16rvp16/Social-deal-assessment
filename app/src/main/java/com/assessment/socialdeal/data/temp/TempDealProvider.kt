@@ -39,8 +39,8 @@ object TempDealProvider {
             pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
         ),
         Deal(
-            unique = "unique3",
-            title = "Deal nummer 3",
+            unique = "unique4",
+            title = "Deal nummer 4",
             image = "/deal/corendon-village-hotel-amsterdam-22113009143271.jpg",
             soldLabel = "Verkocht: 24",
             company = "Company",
@@ -49,8 +49,8 @@ object TempDealProvider {
             pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
         ),
         Deal(
-            unique = "unique4",
-            title = "Deal nummer 4",
+            unique = "unique5",
+            title = "Deal nummer 5",
             image = "/deal/corendon-village-hotel-amsterdam-22113009143271.jpg",
             soldLabel = "Verkocht: 24",
             company = "Company",

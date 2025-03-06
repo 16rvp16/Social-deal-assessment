@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Social Deal Assessment</string>
+    <string name="tab_all">Alle</string>
+    <string name="tab_favorites">Favorieten</string>
+    <string name="navigation_back">Terug</string>
 </resources>
