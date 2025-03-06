@@ -9,4 +9,6 @@ data class Deal(
     val description: String?,
     val city: String,
     val pricingInformation: PricingInformation,
-)
+) {
+    val prefixedImage : String by lazy { "https://images.socialdeal.nl$image" }
+}
