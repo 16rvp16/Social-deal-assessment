@@ -1,4 +1,4 @@
-package com.assessment.socialdeal
+package com.assessment.socialdeal.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
