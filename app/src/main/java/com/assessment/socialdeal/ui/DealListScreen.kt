@@ -1,6 +1,5 @@
 package com.assessment.socialdeal.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.End
@@ -40,6 +39,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.assessment.socialdeal.R
+import com.assessment.socialdeal.data.CurrencyCode
 import com.assessment.socialdeal.data.Deal
 import com.assessment.socialdeal.data.DealCategory
 
@@ -188,7 +188,7 @@ fun DealListItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp),
             )
-            Row (
+            Row(
                 horizontalArrangement = End,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -200,17 +200,9 @@ fun DealListItem(
                     modifier = Modifier
                         .weight(1f),
                 )
-                Text(
-                    text = deal.pricingInformation.fromPrice.amount.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                )
-                Text(
-                    text = deal.pricingInformation.price.amount.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
+                DealPricingLabels(
+                    pricingInformation = deal.pricingInformation,
+                    preferredCurrencyCode = CurrencyCode.Euro
                 )
             }
         }

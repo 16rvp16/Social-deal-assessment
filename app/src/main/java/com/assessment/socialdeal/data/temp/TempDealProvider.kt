@@ -1,6 +1,7 @@
 package com.assessment.socialdeal.data.temp
 
 import com.assessment.socialdeal.data.Currency
+import com.assessment.socialdeal.data.CurrencyCode
 import com.assessment.socialdeal.data.Deal
 import com.assessment.socialdeal.data.Price
 import com.assessment.socialdeal.data.PricingInformation
@@ -16,7 +17,7 @@ object TempDealProvider {
             company = "Company",
             description = "Heb je zin in een deal? Dan is hier een beschrijving!",
             city = "Eindhoven",
-            pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
+            pricingInformation = PricingInformation(price = Price(5000, Currency(symbol = "€", code = CurrencyCode.Euro)), fromPrice = Price(10000, Currency(symbol = "€", code = CurrencyCode.Euro)), discountLabel = "50%"),
         ),
         Deal(
             unique = "unique2",
@@ -26,7 +27,7 @@ object TempDealProvider {
             company = "Company",
             description = "Heb je zin in een deal? Dan is hier een beschrijving!",
             city = "Eindhoven",
-            pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
+            pricingInformation = PricingInformation(price = Price(5000, Currency(symbol = "€", code = CurrencyCode.Euro)), fromPrice = Price(10000, Currency(symbol = "€", code = CurrencyCode.Euro)), discountLabel = "50%"),
         ),
         Deal(
             unique = "unique3",
@@ -36,7 +37,7 @@ object TempDealProvider {
             company = "Company",
             description = "Heb je zin in een deal? Dan is hier een beschrijving!",
             city = "Eindhoven",
-            pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
+            pricingInformation = PricingInformation(price = Price(5000, Currency(symbol = "€", code = CurrencyCode.Euro)), fromPrice = Price(10000, Currency(symbol = "€", code = CurrencyCode.Euro)), discountLabel = "50%"),
         ),
         Deal(
             unique = "unique4",
@@ -46,7 +47,7 @@ object TempDealProvider {
             company = "Company",
             description = "Heb je zin in een deal? Dan is hier een beschrijving!",
             city = "Eindhoven",
-            pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
+            pricingInformation = PricingInformation(price = Price(5000, Currency(symbol = "€", code = CurrencyCode.Euro)), fromPrice = Price(10000, Currency(symbol = "€", code = CurrencyCode.Euro)), discountLabel = "50%"),
         ),
         Deal(
             unique = "unique5",
@@ -56,7 +57,7 @@ object TempDealProvider {
             company = "Company",
             description = "Heb je zin in een deal? Dan is hier een beschrijving!",
             city = "Eindhoven",
-            pricingInformation = PricingInformation(price = Price(50.0, Currency(symbol = "€", code = "EUR")), fromPrice = Price(100.0, Currency(symbol = "€", code = "EUR")), discountLabel = "50%"),
+            pricingInformation = PricingInformation(price = Price(5000, Currency(symbol = "€", code = CurrencyCode.Euro)), fromPrice = Price(10000, Currency(symbol = "€", code = CurrencyCode.Euro)), discountLabel = "50%"),
         ),
     )
 
