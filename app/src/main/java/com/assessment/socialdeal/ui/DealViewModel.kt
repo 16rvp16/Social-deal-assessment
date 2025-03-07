@@ -14,20 +14,29 @@ class DealViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DealUiState())
     val uiState: StateFlow<DealUiState> = _uiState
 
+    private val favoriteDealUniques: MutableSet<String> = HashSet()
+    private var allDeals: List<Deal> = emptyList()
+
     init {
         initializeUiState()
     }
 
     private fun initializeUiState() {
-        val dealLists: MutableMap<DealCategory, List<Deal>> = EnumMap(DealCategory::class.java)
-        dealLists[DealCategory.All] = TempDealProvider.allDeals
-        dealLists[DealCategory.Favorites] = TempDealProvider.favoriteDeals
+        onDealsUpdated(TempDealProvider.allDeals)
+    }
 
-        _uiState.value =
-            DealUiState(
+    private fun onDealsUpdated(updatedDeals: List<Deal> = allDeals) {
+        allDeals = updatedDeals
+        val dealLists: MutableMap<DealCategory, List<Deal>> = EnumMap(DealCategory::class.java)
+        dealLists[DealCategory.All] = updatedDeals
+        dealLists[DealCategory.Favorites] = updatedDeals.filter { favoriteDealUniques.contains(it.unique) }
+
+        _uiState.update { dealUiState ->
+            dealUiState.copy(
                 dealCategories = dealLists,
-                currentSelectedDeal = dealLists[DealCategory.All]?.first()
+                favoriteDealUniques = favoriteDealUniques
             )
+        }
     }
 
     fun updateCurrentDealCategory(dealCategory: DealCategory) {
@@ -54,6 +63,16 @@ class DealViewModel : ViewModel() {
                 currentSelectedDeal = null,
                 isShowingDealList = true
             )
+        }
+    }
+
+    fun updateDealFavorite(deal: Deal, isFavorite: Boolean) {
+        if(if(isFavorite) {
+            favoriteDealUniques.add(deal.unique)
+        } else {
+            favoriteDealUniques.remove(deal.unique)
+        }) {
+            onDealsUpdated()
         }
     }
 }

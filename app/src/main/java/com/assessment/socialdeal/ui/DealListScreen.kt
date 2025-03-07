@@ -1,5 +1,6 @@
 package com.assessment.socialdeal.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.End
@@ -26,6 +27,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,7 +37,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.assessment.socialdeal.R
@@ -47,6 +51,7 @@ import com.assessment.socialdeal.data.DealCategory
 fun DealListScreen(
     dealUiState: DealUiState,
     onDealCardPressed: (Deal) -> Unit,
+    onDealFavoriteToggled: (Deal, Boolean) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
     onTabPressed: (DealCategory) -> Unit,
     modifier: Modifier = Modifier,
@@ -67,6 +72,7 @@ fun DealListScreen(
         dealUiState = dealUiState,
         onTabPressed = onTabPressed,
         onDealCardPressed = onDealCardPressed,
+        onDealFavoriteToggled = onDealFavoriteToggled,
         navigationItemContentList = navigationItemContentList,
         modifier = modifier
     )
@@ -76,6 +82,7 @@ fun DealListScreen(
 private fun DealListScreenContent(
     dealUiState: DealUiState,
     onDealCardPressed: (Deal) -> Unit,
+    onDealFavoriteToggled: (Deal, Boolean) -> Unit,
     onTabPressed: ((DealCategory) -> Unit),
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier,
@@ -89,6 +96,7 @@ private fun DealListScreenContent(
             DealListContent(
                 dealUiState = dealUiState,
                 onDealCardPressed = onDealCardPressed,
+                onDealFavoriteToggled = onDealFavoriteToggled,
                 modifier = Modifier
                     .weight(1f)
                     .padding(
@@ -109,6 +117,7 @@ private fun DealListScreenContent(
 fun DealListContent(
     dealUiState: DealUiState,
     onDealCardPressed: (Deal) -> Unit,
+    onDealFavoriteToggled: (Deal, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dealList = dealUiState.currentDealList
@@ -122,10 +131,14 @@ fun DealListContent(
     ) {
         items(items = dealList, key = { deal -> deal.unique }) { deal ->
             DealListItem(
+                dealUiState = dealUiState,
                 deal = deal,
                 selected = false,
                 onCardClicked = {
                     onDealCardPressed(deal)
+                },
+                onFavoriteToggled = { favorite ->
+                    onDealFavoriteToggled(deal, favorite)
                 }
             )
         }
@@ -134,9 +147,11 @@ fun DealListContent(
 
 @Composable
 fun DealListItem(
+    dealUiState: DealUiState,
     deal: Deal,
     selected: Boolean,
     onCardClicked: () -> Unit,
+    onFavoriteToggled: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -154,19 +169,22 @@ fun DealListItem(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.deal_list_item_padding))
         ) {
-
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(deal.prefixedImage)
-                    .crossfade(true)
-                    .build(),
-                error = painterResource(R.drawable.ic_broken_image),
-                contentDescription = stringResource(R.string.deal_photo),
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(size = 16.dp))
-            )
+            ) {
+                DealImage(deal = deal) {
+                    Log.d("Henk", "Drawing overlay")
+                    DealFavoriteToggleButton(
+                        dealUiState = dealUiState,
+                        deal = deal,
+                        onFavoriteToggled = onFavoriteToggled,
+                        modifier = Modifier
+                            .align(alignment = Alignment.BottomEnd)
+                            .zIndex(1f)
+                    )
+                }
+            }
             Text(
                 text = deal.title,
                 style = MaterialTheme.typography.headlineMedium,
