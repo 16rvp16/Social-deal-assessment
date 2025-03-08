@@ -45,12 +45,26 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
         getDeals()
     }
 
-    fun getDeals() {
+    private fun getDeals() {
         viewModelScope.launch {
 
             try {
                 val dealPage = dealsRepository.getDeals()
                 onDealsUpdated(dealPage.deals)
+            } catch (e: IOException) {
+                //TODO error
+            } catch (e: HttpException) {
+                //TODO error
+            }
+        }
+    }
+
+    private fun getDetails(deal: Deal) {
+        viewModelScope.launch {
+
+            try {
+                val dealDetails = dealsRepository.getDetails(deal)
+                onDetailsUpdated(dealDetails = dealDetails)
             } catch (e: IOException) {
                 //TODO error
             } catch (e: HttpException) {
@@ -73,6 +87,21 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
         }
     }
 
+    private fun onDetailsUpdated(dealDetails: Deal) {
+        _uiState.update { dealUiState ->
+            // Update the details if this deal is still selected
+            // otherwise we do nothing
+            if(dealUiState.currentSelectedDeal?.unique == dealDetails.unique) {
+                dealUiState.copy(
+                    currentSelectedDeal = dealDetails
+                )
+            } else {
+                dealUiState
+            }
+        }
+
+    }
+
     fun updateCurrentDealCategory(dealCategory: DealCategory) {
         _uiState.update { dealUiState ->
             dealUiState.copy(
@@ -89,6 +118,7 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
                 isShowingDealList = false
             )
         }
+        getDetails(deal)
     }
 
     fun closeDetailsScreen() {
