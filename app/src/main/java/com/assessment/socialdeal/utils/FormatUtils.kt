@@ -1,7 +1,7 @@
 package com.assessment.socialdeal.utils
 
-import com.assessment.socialdeal.data.CurrencyCode
-import com.assessment.socialdeal.data.Price
+import com.assessment.socialdeal.model.CurrencyCode
+import com.assessment.socialdeal.model.Price
 import java.util.Locale
 
 /**

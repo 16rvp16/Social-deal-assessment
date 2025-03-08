@@ -1,4 +1,4 @@
-package com.assessment.socialdeal.data
+package com.assessment.socialdeal.model
 
 /**
  * An enum class to define different types of deal categories.

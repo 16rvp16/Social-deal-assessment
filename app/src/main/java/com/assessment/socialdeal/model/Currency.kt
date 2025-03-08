@@ -1,12 +1,21 @@
-package com.assessment.socialdeal.data
+package com.assessment.socialdeal.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Currency(
+    @SerialName("symbol")
     val symbol: String,
+    @SerialName("code")
     val code: CurrencyCode
 )
 
+@Serializable
 enum class CurrencyCode(val symbol: String) {
+    @SerialName("EUR")
     Euro(symbol = "€"),
+    @SerialName("USD")
     Dollar(symbol = "$");
 
     /**

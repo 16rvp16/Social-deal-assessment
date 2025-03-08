@@ -1,15 +1,35 @@
 package com.assessment.socialdeal.ui
 
 import androidx.lifecycle.ViewModel
-import com.assessment.socialdeal.data.Deal
-import com.assessment.socialdeal.data.DealCategory
-import com.assessment.socialdeal.data.temp.TempDealProvider
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.assessment.socialdeal.DealsApplication
+import com.assessment.socialdeal.data.DealsRepository
+import com.assessment.socialdeal.model.Deal
+import com.assessment.socialdeal.model.DealCategory
+import com.assessment.socialdeal.temp.TempDealProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 import java.util.EnumMap
 
-class DealViewModel : ViewModel() {
+class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() {
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as DealsApplication)
+                val dealsRepository = application.container.dealsRepository
+                DealViewModel(dealsRepository = dealsRepository)
+            }
+        }
+    }
 
     private val _uiState = MutableStateFlow(DealUiState())
     val uiState: StateFlow<DealUiState> = _uiState
@@ -22,7 +42,21 @@ class DealViewModel : ViewModel() {
     }
 
     private fun initializeUiState() {
-        onDealsUpdated(TempDealProvider.allDeals)
+        getDeals()
+    }
+
+    fun getDeals() {
+        viewModelScope.launch {
+
+            try {
+                val dealPage = dealsRepository.getDeals()
+                onDealsUpdated(dealPage.deals)
+            } catch (e: IOException) {
+                //TODO error
+            } catch (e: HttpException) {
+                //TODO error
+            }
+        }
     }
 
     private fun onDealsUpdated(updatedDeals: List<Deal> = allDeals) {

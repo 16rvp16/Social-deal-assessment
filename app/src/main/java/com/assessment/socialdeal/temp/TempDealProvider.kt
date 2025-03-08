@@ -1,10 +1,10 @@
-package com.assessment.socialdeal.data.temp
+package com.assessment.socialdeal.temp
 
-import com.assessment.socialdeal.data.Currency
-import com.assessment.socialdeal.data.CurrencyCode
-import com.assessment.socialdeal.data.Deal
-import com.assessment.socialdeal.data.Price
-import com.assessment.socialdeal.data.PricingInformation
+import com.assessment.socialdeal.model.Currency
+import com.assessment.socialdeal.model.CurrencyCode
+import com.assessment.socialdeal.model.Deal
+import com.assessment.socialdeal.model.Price
+import com.assessment.socialdeal.model.PricingInformation
 
 object TempDealProvider {
 

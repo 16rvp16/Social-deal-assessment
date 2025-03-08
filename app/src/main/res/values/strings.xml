@@ -7,4 +7,6 @@
     <string name="favorite_icon_description">Favorite deal</string>
     <string name="not_favorite_icon_description">Not favorite deal</string>
     <string name="load_image_error_description">Unable to load image</string>
+    <string name="back_navigation">back</string>
+    <string name="deals_navigation_title">Deals</string>
 </resources>

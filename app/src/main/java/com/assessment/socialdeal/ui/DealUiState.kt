@@ -1,7 +1,7 @@
 package com.assessment.socialdeal.ui
 
-import com.assessment.socialdeal.data.Deal
-import com.assessment.socialdeal.data.DealCategory
+import com.assessment.socialdeal.model.Deal
+import com.assessment.socialdeal.model.DealCategory
 
 data class DealUiState(
     val dealCategories: Map<DealCategory, List<Deal>> = emptyMap(),

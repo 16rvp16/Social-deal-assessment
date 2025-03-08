@@ -9,23 +9,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun DealApp(
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: DealViewModel = viewModel()
+    val viewModel: DealViewModel = viewModel(factory = DealViewModel.Factory)
     val dealUiState = viewModel.uiState.collectAsState().value
 
-    DealListScreen(
-        dealUiState = dealUiState,
-        onTabPressed = { dealCategory ->
-            viewModel.updateCurrentDealCategory(dealCategory = dealCategory)
-        },
-        onDealCardPressed = { deal ->
-            viewModel.updateDetailsScreenStates(deal = deal)
-        },
-        onDetailScreenBackPressed = {
-            viewModel.closeDetailsScreen()
-        },
-        onDealFavoriteToggled = { deal, favorite ->
-            viewModel.updateDealFavorite(deal, favorite)
-        },
-        modifier = modifier
-    )
+    if (dealUiState.isShowingDealList) {
+        DealListScreen(
+            dealUiState = dealUiState,
+            onTabPressed = { dealCategory ->
+                viewModel.updateCurrentDealCategory(dealCategory = dealCategory)
+            },
+            onDealCardPressed = { deal ->
+                viewModel.updateDetailsScreenStates(deal = deal)
+            },
+            onDealFavoriteToggled = { deal, favorite ->
+                viewModel.updateDealFavorite(deal, favorite)
+            },
+            modifier = modifier
+        )
+    } else {
+        DealDetailScreen(
+            dealUiState = dealUiState,
+            onBackPressed = {
+                viewModel.closeDetailsScreen()
+            },
+            onDealFavoriteToggled = { deal, favorite ->
+                viewModel.updateDealFavorite(deal, favorite)
+            },
+            modifier = modifier
+        )
+    }
 }

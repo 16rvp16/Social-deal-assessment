@@ -1,7 +1,9 @@
 package com.assessment.socialdeal.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,10 +39,79 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.assessment.socialdeal.R
-import com.assessment.socialdeal.data.CurrencyCode
-import com.assessment.socialdeal.data.Deal
-import com.assessment.socialdeal.data.PricingInformation
+import com.assessment.socialdeal.model.CurrencyCode
+import com.assessment.socialdeal.model.Deal
+import com.assessment.socialdeal.model.PricingInformation
+import com.assessment.socialdeal.utils.conditional
 import com.assessment.socialdeal.utils.formatPrice
+
+@Composable
+fun DealHeader(
+    dealUiState: DealUiState,
+    deal: Deal,
+    imageHasRoundedCorners: Boolean = true,
+    onFavoriteToggled: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    )
+    {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            DealImage(deal = deal, roundedCorners = imageHasRoundedCorners) {
+                DealFavoriteToggleButton(
+                    dealUiState = dealUiState,
+                    deal = deal,
+                    onFavoriteToggled = onFavoriteToggled,
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .zIndex(1f)
+                )
+            }
+        }
+        Text(
+            text = deal.title,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .padding(top = 12.dp, bottom = 12.dp),
+        )
+        Text(
+            text = deal.company,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .padding(bottom = 4.dp),
+        )
+        Text(
+            text = deal.city,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .padding(bottom = 8.dp),
+        )
+        Row(
+            horizontalArrangement = End,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = deal.soldLabel,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .weight(1f),
+            )
+            DealPricingLabels(
+                pricingInformation = deal.pricingInformation,
+                preferredCurrencyCode = CurrencyCode.Euro
+            )
+        }
+    }
+}
 
 @Composable
 fun DealPricingLabels(
@@ -49,13 +120,15 @@ fun DealPricingLabels(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
-        Text(
-            text = formatPrice(pricingInformation.fromPrice, preferredCurrencyCode),
-            style = MaterialTheme.typography.bodyMedium.plus(TextStyle(textDecoration = TextDecoration.LineThrough)),
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .padding(end = 8.dp)
-        )
+        pricingInformation.fromPrice?.let { fromPrice ->
+            Text(
+                text = formatPrice(fromPrice, preferredCurrencyCode),
+                style = MaterialTheme.typography.bodyMedium.plus(TextStyle(textDecoration = TextDecoration.LineThrough)),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            )
+        }
         Text(
             text = formatPrice(pricingInformation.price, preferredCurrencyCode),
             style = MaterialTheme.typography.bodyLarge,
@@ -101,6 +174,7 @@ fun DealFavoriteToggleButton(
 @Composable
 fun DealImage(
     deal: Deal,
+    roundedCorners: Boolean = true,
     imageOverlay: @Composable (AsyncImagePainter.State) -> Unit = { }
 ) {
     val painter = rememberAsyncImagePainter(
@@ -123,13 +197,16 @@ fun DealImage(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(size = 16.dp))
+                .conditional(roundedCorners, {
+                    clip(RoundedCornerShape(size = 16.dp))
+                })
         )
         when (painterState.value) {
             is Loading -> CircularProgressIndicator(
                 modifier = Modifier
                     .align(alignment = Alignment.Center)
             )
+
             is Error -> Icon(
                 painter = painterResource(R.drawable.ic_broken_image),
                 tint = colorResource(id = R.color.grey),
