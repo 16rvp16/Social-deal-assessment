@@ -12,21 +12,7 @@ fun DealApp(
     val viewModel: DealViewModel = viewModel(factory = DealViewModel.Factory)
     val dealUiState = viewModel.uiState.collectAsState().value
 
-    if (dealUiState.isShowingDealList) {
-        DealListScreen(
-            dealUiState = dealUiState,
-            onTabPressed = { dealCategory ->
-                viewModel.updateCurrentDealCategory(dealCategory = dealCategory)
-            },
-            onDealCardPressed = { deal ->
-                viewModel.updateDetailsScreenStates(deal = deal)
-            },
-            onDealFavoriteToggled = { deal, favorite ->
-                viewModel.updateDealFavorite(deal, favorite)
-            },
-            modifier = modifier
-        )
-    } else {
+    if (dealUiState.isShowingDealDetails) {
         DealDetailScreen(
             dealUiState = dealUiState,
             onBackPressed = {
@@ -34,6 +20,23 @@ fun DealApp(
             },
             onDealFavoriteToggled = { deal, favorite ->
                 viewModel.updateDealFavorite(deal, favorite)
+            },
+            modifier = modifier
+        )
+    } else {
+        DealListScreen(
+            dealUiState = dealUiState,
+            onTabPressed = { navigationItem ->
+                viewModel.updateCurrentNavigationItem(navigationItem = navigationItem)
+            },
+            onDealCardPressed = { deal ->
+                viewModel.updateDetailsScreenStates(deal = deal)
+            },
+            onDealFavoriteToggled = { deal, favorite ->
+                viewModel.updateDealFavorite(deal, favorite)
+            },
+            onPreferredCurrencyChanged = { currencyCode ->
+                viewModel.selectPreferredCurrency(currencyCode)
             },
             modifier = modifier
         )

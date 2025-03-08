@@ -107,7 +107,7 @@ fun DealHeader(
             )
             DealPricingLabels(
                 pricingInformation = deal.pricingInformation,
-                preferredCurrencyCode = CurrencyCode.Euro
+                preferredCurrencyCode = dealUiState.preferredCurrency
             )
         }
     }

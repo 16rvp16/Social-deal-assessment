@@ -8,9 +8,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.assessment.socialdeal.DealsApplication
 import com.assessment.socialdeal.data.DealsRepository
+import com.assessment.socialdeal.data.UserPreferencesRepository
+import com.assessment.socialdeal.model.CurrencyCode
 import com.assessment.socialdeal.model.Deal
-import com.assessment.socialdeal.model.DealCategory
-import com.assessment.socialdeal.temp.TempDealProvider
+import com.assessment.socialdeal.model.NavigationItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -19,14 +20,19 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.util.EnumMap
 
-class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() {
+class DealViewModel(
+    private val dealsRepository: DealsRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
+) : ViewModel() {
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as DealsApplication)
-                val dealsRepository = application.container.dealsRepository
-                DealViewModel(dealsRepository = dealsRepository)
+                DealViewModel(
+                    dealsRepository = application.container.dealsRepository,
+                    userPreferencesRepository = application.container.userPreferencesRepository
+                )
             }
         }
     }
@@ -38,10 +44,15 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
     private var allDeals: List<Deal> = emptyList()
 
     init {
-        initializeUiState()
-    }
-
-    private fun initializeUiState() {
+        viewModelScope.launch {
+            userPreferencesRepository.preferredCurrency.collect { currencyCode ->
+                _uiState.update { dealUiState ->
+                    dealUiState.copy(
+                        preferredCurrency = currencyCode,
+                    )
+                }
+            }
+        }
         getDeals()
     }
 
@@ -75,9 +86,10 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
 
     private fun onDealsUpdated(updatedDeals: List<Deal> = allDeals) {
         allDeals = updatedDeals
-        val dealLists: MutableMap<DealCategory, List<Deal>> = EnumMap(DealCategory::class.java)
-        dealLists[DealCategory.All] = updatedDeals
-        dealLists[DealCategory.Favorites] = updatedDeals.filter { favoriteDealUniques.contains(it.unique) }
+        val dealLists: MutableMap<NavigationItem, List<Deal>> = EnumMap(NavigationItem::class.java)
+        dealLists[NavigationItem.All] = updatedDeals
+        dealLists[NavigationItem.Favorites] =
+            updatedDeals.filter { favoriteDealUniques.contains(it.unique) }
 
         _uiState.update { dealUiState ->
             dealUiState.copy(
@@ -91,7 +103,7 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
         _uiState.update { dealUiState ->
             // Update the details if this deal is still selected
             // otherwise we do nothing
-            if(dealUiState.currentSelectedDeal?.unique == dealDetails.unique) {
+            if (dealUiState.currentSelectedDeal?.unique == dealDetails.unique) {
                 dealUiState.copy(
                     currentSelectedDeal = dealDetails
                 )
@@ -102,10 +114,10 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
 
     }
 
-    fun updateCurrentDealCategory(dealCategory: DealCategory) {
+    fun updateCurrentNavigationItem(navigationItem: NavigationItem) {
         _uiState.update { dealUiState ->
             dealUiState.copy(
-                currentDealCategory = dealCategory,
+                currentNavigationItem = navigationItem,
                 currentSelectedDeal = null
             )
         }
@@ -115,7 +127,7 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
         _uiState.update { dealUiState ->
             dealUiState.copy(
                 currentSelectedDeal = deal,
-                isShowingDealList = false
+                isShowingDealDetails = true
             )
         }
         getDetails(deal)
@@ -125,18 +137,25 @@ class DealViewModel(private val dealsRepository: DealsRepository) : ViewModel() 
         _uiState.update { dealUiState ->
             dealUiState.copy(
                 currentSelectedDeal = null,
-                isShowingDealList = true
+                isShowingDealDetails = false
             )
         }
     }
 
     fun updateDealFavorite(deal: Deal, isFavorite: Boolean) {
-        if(if(isFavorite) {
-            favoriteDealUniques.add(deal.unique)
-        } else {
-            favoriteDealUniques.remove(deal.unique)
-        }) {
+        if (if (isFavorite) {
+                favoriteDealUniques.add(deal.unique)
+            } else {
+                favoriteDealUniques.remove(deal.unique)
+            }
+        ) {
             onDealsUpdated()
+        }
+    }
+
+    fun selectPreferredCurrency(currencyCode: CurrencyCode) {
+        viewModelScope.launch {
+            userPreferencesRepository.savePreferredCurrency(currencyCode)
         }
     }
 }

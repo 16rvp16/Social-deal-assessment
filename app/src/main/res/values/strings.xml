@@ -2,6 +2,7 @@
     <string name="app_name">Social Deal Assessment</string>
     <string name="tab_all">Alle</string>
     <string name="tab_favorites">Favorieten</string>
+    <string name="tab_preferences">Voorkeuren</string>
     <string name="navigation_back">Terug</string>
     <string name="deal_photo">Deal foto</string>
     <string name="favorite_icon_description">Favorite deal</string>

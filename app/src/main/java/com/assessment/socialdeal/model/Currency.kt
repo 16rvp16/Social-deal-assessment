@@ -12,11 +12,27 @@ data class Currency(
 )
 
 @Serializable
-enum class CurrencyCode(val symbol: String) {
+enum class CurrencyCode(val symbol: String, val code: String) {
     @SerialName("EUR")
-    Euro(symbol = "€"),
+    Euro(symbol = "€", "EUR"),
+
     @SerialName("USD")
-    Dollar(symbol = "$");
+    Dollar(symbol = "$", "USD");
+
+    companion object {
+        fun parseCode(code: String?): CurrencyCode {
+            return when (code) {
+                Euro.code -> Euro
+                Dollar.code -> Dollar
+                else -> Euro
+            }
+        }
+
+        /**
+         * For simplicity the exchange rates are static at the moment
+         */
+        private const val EUR_TO_USD_EXCHANGE_RATE = 1.08
+    }
 
     /**
      * Retrieves the exchange rate that needs to be applied to a amount in this currency to reach
@@ -38,12 +54,5 @@ enum class CurrencyCode(val symbol: String) {
                 }
             }
         }
-    }
-
-    /**
-     * For simplicity the exchange rates are static at the moment
-     */
-    private companion object ExchangeRates {
-        const val EUR_TO_USD_EXCHANGE_RATE = 1.08
     }
 }
