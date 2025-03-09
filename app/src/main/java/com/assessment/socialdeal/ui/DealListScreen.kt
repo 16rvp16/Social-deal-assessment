@@ -2,7 +2,6 @@ package com.assessment.socialdeal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,8 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -43,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
@@ -58,6 +60,7 @@ fun DealListScreen(
     onDealFavoriteToggled: (Deal, Boolean) -> Unit,
     onTabPressed: (NavigationItem) -> Unit,
     onPreferredCurrencyChanged: (CurrencyCode) -> Unit,
+    onLoadDealsPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItemContentList = listOf(
@@ -85,7 +88,13 @@ fun DealListScreen(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
                 title = {
-                    Text(stringResource(R.string.deals_navigation_title))
+                    Text(
+                        if (dealUiState.currentNavigationItem == NavigationItem.Preferences) {
+                            stringResource(R.string.settings_navigation_title)
+                        } else {
+                            stringResource(R.string.deals_navigation_title)
+                        }
+                    )
                 }
             )
         },
@@ -102,6 +111,7 @@ fun DealListScreen(
             onDealCardPressed = onDealCardPressed,
             onDealFavoriteToggled = onDealFavoriteToggled,
             onPreferredCurrencyChanged = onPreferredCurrencyChanged,
+            onLoadDealsPressed = onLoadDealsPressed,
             modifier = Modifier.padding(contentPadding)
         )
     }
@@ -113,6 +123,7 @@ private fun DealListScreenContent(
     onDealCardPressed: (Deal) -> Unit,
     onDealFavoriteToggled: (Deal, Boolean) -> Unit,
     onPreferredCurrencyChanged: (CurrencyCode) -> Unit,
+    onLoadDealsPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -136,6 +147,7 @@ private fun DealListScreenContent(
                     dealUiState = dealUiState,
                     onDealCardPressed = onDealCardPressed,
                     onDealFavoriteToggled = onDealFavoriteToggled,
+                    onLoadDealsPressed = onLoadDealsPressed,
                     modifier = Modifier
                         .weight(1f)
                         .padding(
@@ -250,28 +262,61 @@ fun DealListContent(
     dealUiState: DealUiState,
     onDealCardPressed: (Deal) -> Unit,
     onDealFavoriteToggled: (Deal, Boolean) -> Unit,
+    onLoadDealsPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dealList = dealUiState.currentDealList
 
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(R.dimen.deal_list_item_vertical_spacing)
-        )
-    ) {
-        items(items = dealList, key = { deal -> deal.unique }) { deal ->
-            DealListItem(
-                dealUiState = dealUiState,
-                deal = deal,
-                selected = false,
-                onCardClicked = {
-                    onDealCardPressed(deal)
-                },
-                onFavoriteToggled = { favorite ->
-                    onDealFavoriteToggled(deal, favorite)
+    when (dealUiState.dealListDataRequestState) {
+        DataRequestState.Success -> {
+            LazyColumn(
+                modifier = modifier,
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(R.dimen.deal_list_item_vertical_spacing)
+                )
+            ) {
+                items(items = dealList, key = { deal -> deal.unique }) { deal ->
+                    DealListItem(
+                        dealUiState = dealUiState,
+                        deal = deal,
+                        selected = false,
+                        onCardClicked = {
+                            onDealCardPressed(deal)
+                        },
+                        onFavoriteToggled = { favorite ->
+                            onDealFavoriteToggled(deal, favorite)
+                        }
+                    )
                 }
-            )
+            }
+        }
+
+        DataRequestState.Loading -> {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+                Text(text = "Op zoek naar deals", textAlign = TextAlign.Center)
+            }
+        }
+
+        DataRequestState.Failure -> {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Er is iets mis gegaan bij het ophalen van de deals",
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    textAlign = TextAlign.Center
+                )
+                Button(onClick = onLoadDealsPressed) {
+                    Text(text = "Opnieuw zoeken")
+                }
+            }
         }
     }
 }

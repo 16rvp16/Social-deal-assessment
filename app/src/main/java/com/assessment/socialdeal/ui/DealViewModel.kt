@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.assessment.socialdeal.DealsApplication
 import com.assessment.socialdeal.data.DealsRepository
+import com.assessment.socialdeal.data.ResultState
 import com.assessment.socialdeal.data.UserPreferencesRepository
 import com.assessment.socialdeal.model.CurrencyCode
 import com.assessment.socialdeal.model.Deal
@@ -56,30 +57,52 @@ class DealViewModel(
         getDeals()
     }
 
-    private fun getDeals() {
+    fun getDeals() {
+        _uiState.update { dealUiState ->
+            dealUiState.copy(
+                dealListDataRequestState = DataRequestState.Loading
+            )
+        }
         viewModelScope.launch {
-
-            try {
-                val dealPage = dealsRepository.getDeals()
-                onDealsUpdated(dealPage.deals)
-            } catch (e: IOException) {
-                //TODO error
-            } catch (e: HttpException) {
-                //TODO error
+            val dealPageResult = dealsRepository.getDeals()
+            if(dealPageResult.resultState == ResultState.Success && dealPageResult.result != null) {
+                onDealsUpdated(updatedDeals = dealPageResult.result.deals)
+                _uiState.update { dealUiState ->
+                    dealUiState.copy(
+                        dealListDataRequestState = DataRequestState.Success
+                    )
+                }
+            } else {
+                _uiState.update { dealUiState ->
+                    dealUiState.copy(
+                        dealListDataRequestState = DataRequestState.Failure
+                    )
+                }
             }
         }
     }
 
-    private fun getDetails(deal: Deal) {
+    fun getDetails(deal: Deal) {
+        _uiState.update { dealUiState ->
+            dealUiState.copy(
+                dealDetailsDataRequestState = DataRequestState.Loading
+            )
+        }
         viewModelScope.launch {
-
-            try {
-                val dealDetails = dealsRepository.getDetails(deal)
-                onDetailsUpdated(dealDetails = dealDetails)
-            } catch (e: IOException) {
-                //TODO error
-            } catch (e: HttpException) {
-                //TODO error
+            val dealDetailsResult = dealsRepository.getDetails(deal)
+            if(dealDetailsResult.resultState == ResultState.Success && dealDetailsResult.result != null) {
+                onDetailsUpdated(dealDetails = dealDetailsResult.result)
+                _uiState.update { dealUiState ->
+                    dealUiState.copy(
+                        dealDetailsDataRequestState = DataRequestState.Success
+                    )
+                }
+            } else {
+                _uiState.update { dealUiState ->
+                    dealUiState.copy(
+                        dealDetailsDataRequestState = DataRequestState.Failure
+                    )
+                }
             }
         }
     }

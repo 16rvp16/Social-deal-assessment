@@ -10,4 +10,5 @@
     <string name="load_image_error_description">Unable to load image</string>
     <string name="back_navigation">back</string>
     <string name="deals_navigation_title">Deals</string>
+    <string name="settings_navigation_title">Settings</string>
 </resources>

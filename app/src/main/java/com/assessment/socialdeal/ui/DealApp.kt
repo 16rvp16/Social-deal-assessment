@@ -21,6 +21,9 @@ fun DealApp(
             onDealFavoriteToggled = { deal, favorite ->
                 viewModel.updateDealFavorite(deal, favorite)
             },
+            onLoadDetailsPressed = {deal ->
+                viewModel.getDetails(deal)
+            },
             modifier = modifier
         )
     } else {
@@ -37,6 +40,9 @@ fun DealApp(
             },
             onPreferredCurrencyChanged = { currencyCode ->
                 viewModel.selectPreferredCurrency(currencyCode)
+            },
+            onLoadDealsPressed = {
+                viewModel.getDeals()
             },
             modifier = modifier
         )

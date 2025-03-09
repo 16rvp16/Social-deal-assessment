@@ -1,15 +1,16 @@
 package com.assessment.socialdeal.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement.End
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,9 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.core.graphics.drawable.IconCompat
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.Deal
 
@@ -36,6 +37,7 @@ fun DealDetailScreen(
     dealUiState: DealUiState,
     onBackPressed: () -> Unit,
     onDealFavoriteToggled: (Deal, Boolean) -> Unit,
+    onLoadDetailsPressed: (Deal) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(topBar = {
@@ -60,6 +62,7 @@ fun DealDetailScreen(
 
     }, modifier = modifier)
     { contentPadding ->
+
         LazyColumn(
             contentPadding = contentPadding,
             modifier = Modifier
@@ -72,18 +75,64 @@ fun DealDetailScreen(
                         DealFavoriteToggleButton(
                             dealUiState = dealUiState,
                             deal = deal,
-                            onFavoriteToggled = { favorite -> onDealFavoriteToggled(deal, favorite) },
+                            onFavoriteToggled = { favorite ->
+                                onDealFavoriteToggled(
+                                    deal,
+                                    favorite
+                                )
+                            },
                             modifier = Modifier
                                 .align(alignment = Alignment.BottomEnd)
                                 .zIndex(1f)
                         )
                     }
-                    DealSummary(dealUiState = dealUiState, deal = deal, modifier = Modifier.padding(20.dp))
-                    DealDetailsContent(
-                        dealUiState = dealUiState, modifier = modifier
-                            .fillMaxWidth()
-                            .padding(20.dp)
+                    DealSummary(
+                        dealUiState = dealUiState,
+                        deal = deal,
+                        modifier = Modifier.padding(20.dp)
                     )
+
+                    when (dealUiState.dealDetailsDataRequestState) {
+                        DataRequestState.Success -> {
+                            DealDetailsContent(
+                                dealUiState = dealUiState, modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp)
+                            )
+                        }
+
+                        DataRequestState.Loading -> {
+                            Column(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator()
+                                Text(text = "Retrieving details", textAlign = TextAlign.Center)
+                            }
+                        }
+
+                        DataRequestState.Failure -> {
+                            Column(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Something went wrong while retrieving details",
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                                Button(onClick = { onLoadDetailsPressed(deal) }) {
+                                    Text(text = "Retry")
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
