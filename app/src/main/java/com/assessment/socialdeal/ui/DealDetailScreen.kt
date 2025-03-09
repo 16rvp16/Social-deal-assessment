@@ -1,5 +1,6 @@
 package com.assessment.socialdeal.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,10 @@ fun DealDetailScreen(
     onLoadDetailsPressed: (Deal) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // BackHandler so that we can register when the user navigates back, and close the detail screen
+    // accordingly
+    BackHandler(enabled = true, onBack = onBackPressed)
+
     Scaffold(topBar = {
         // The top AppBar contains a button to navigate back to the list screen
         TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
