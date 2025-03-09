@@ -183,7 +183,7 @@ fun PreferredCurrencyPreference(
     Card(modifier = modifier) {
         Row {
             Text(
-                text = "Munteenheid",
+                text = stringResource(R.string.currency_preference_label),
                 maxLines = 1,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -275,7 +275,7 @@ fun DealListContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "You don't have favorites yet",
+                        text = stringResource(R.string.no_favorites_message),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center
@@ -312,7 +312,7 @@ fun DealListContent(
             ) {
                 CircularProgressIndicator()
                 Text(
-                    text = "Op zoek naar deals",
+                    text = stringResource(R.string.retrieving_deals_progress_message),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
@@ -327,7 +327,7 @@ fun DealListContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Er is iets mis gegaan bij het ophalen van de deals",
+                    text = stringResource(R.string.retreive_details_error_message),
                     modifier = Modifier.padding(bottom = 8.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
@@ -335,7 +335,7 @@ fun DealListContent(
                 )
                 Button(onClick = onLoadDealsPressed) {
                     Text(
-                        text = "Opnieuw zoeken",
+                        text = stringResource(R.string.retry_label),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSecondary
                     )

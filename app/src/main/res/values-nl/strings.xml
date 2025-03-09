@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_all">Alle</string>
+    <string name="tab_favorites">Favorieten</string>
+    <string name="tab_preferences">Voorkeuren</string>
+    <string name="navigation_back">Terug</string>
+    <string name="deal_photo">Deal foto</string>
+    <string name="favorite_icon_description">Favoriete deal</string>
+    <string name="not_favorite_icon_description">Geen favoriete deal</string>
+    <string name="load_image_error_description">Kan de afbeelding niet inladen</string>
+    <string name="deals_navigation_title">Deals</string>
+    <string name="settings_navigation_title">Settings</string>
+    <string name="retrieving_details_progress_message">Details ophalen…</string>
+    <string name="retrieving_details_error_message">Er is iets fout gegaan bij het ophalen van de detail informatie</string>
+    <string name="retry_label">Opnieuw proberen</string>
+    <string name="retreive_details_error_message">Er is iets mis gegaan bij het ophalen van de deals</string>
+    <string name="no_favorites_message">Je hebt nog geen favoriete deals</string>
+    <string name="retrieving_deals_progress_message">Deals ophalen…</string>
+    <string name="currency_preference_label">Munteenheid</string>
+</resources>

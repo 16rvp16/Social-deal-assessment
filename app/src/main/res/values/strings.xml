@@ -1,14 +1,20 @@
 <resources>
-    <string name="app_name">Social Deal Assessment</string>
-    <string name="tab_all">Alle</string>
-    <string name="tab_favorites">Favorieten</string>
-    <string name="tab_preferences">Voorkeuren</string>
-    <string name="navigation_back">Terug</string>
-    <string name="deal_photo">Deal foto</string>
+    <string name="app_name" translatable="false">Social Deal Assessment</string>
+    <string name="tab_all">All</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_preferences">Preferences</string>
+    <string name="navigation_back">Back</string>
+    <string name="deal_photo">Deal photo</string>
     <string name="favorite_icon_description">Favorite deal</string>
-    <string name="not_favorite_icon_description">Not favorite deal</string>
+    <string name="not_favorite_icon_description">Not a favorite deal</string>
     <string name="load_image_error_description">Unable to load image</string>
-    <string name="back_navigation">back</string>
     <string name="deals_navigation_title">Deals</string>
     <string name="settings_navigation_title">Settings</string>
+    <string name="retrieving_details_progress_message">Retrieving details…</string>
+    <string name="retrieving_details_error_message">Something went wrong while retrieving details</string>
+    <string name="retry_label">Retry</string>
+    <string name="retreive_details_error_message">Something went wrong while retrieving deals</string>
+    <string name="no_favorites_message">You don\'t have any favorite deals yet</string>
+    <string name="retrieving_deals_progress_message">Retrieving deals…</string>
+    <string name="currency_preference_label">Currency</string>
 </resources>

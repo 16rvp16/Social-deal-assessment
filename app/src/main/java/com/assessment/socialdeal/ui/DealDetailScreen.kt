@@ -54,7 +54,7 @@ fun DealDetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_navigation)
+                        contentDescription = stringResource(R.string.navigation_back)
                     )
                 }
             }
@@ -111,7 +111,7 @@ fun DealDetailScreen(
                             ) {
                                 CircularProgressIndicator()
                                 Text(
-                                    text = "Retrieving details",
+                                    text = stringResource(R.string.retrieving_details_progress_message),
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -128,7 +128,7 @@ fun DealDetailScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Something went wrong while retrieving details",
+                                    text = stringResource(R.string.retrieving_details_error_message),
                                     modifier = Modifier.padding(bottom = 8.dp),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
@@ -136,7 +136,7 @@ fun DealDetailScreen(
                                 )
                                 Button(onClick = { onLoadDetailsPressed(deal) }) {
                                     Text(
-                                        text = "Retry",
+                                        text = stringResource(R.string.retry_label),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSecondary
                                     )
