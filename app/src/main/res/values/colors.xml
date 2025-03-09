@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#EC0B0B</color>
     <color name="grey">#9B9898</color>
+    <color name="price_highlight">#42f595</color>
+    <color name="sold_highlight">#42d7f5</color>
 </resources>

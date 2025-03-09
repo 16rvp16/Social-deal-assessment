@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -58,22 +59,23 @@ fun DealSummary(
     {
         Text(
             text = deal.title,
-            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .padding(top = 12.dp, bottom = 12.dp),
         )
         Text(
             text = deal.company,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
                 .padding(bottom = 4.dp),
         )
         Text(
             text = deal.city,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
                 .padding(bottom = 8.dp),
         )
@@ -84,9 +86,11 @@ fun DealSummary(
         ) {
             Text(
                 text = deal.soldLabel,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyLarge,
+                color = colorResource(id = R.color.sold_highlight),
                 modifier = Modifier
+                    .align(Alignment.CenterVertically)
                     .weight(1f),
             )
             DealPricingLabels(
@@ -107,16 +111,18 @@ fun DealPricingLabels(
         pricingInformation.fromPrice?.let { fromPrice ->
             Text(
                 text = formatPrice(fromPrice, preferredCurrencyCode),
-                style = MaterialTheme.typography.bodyMedium.plus(TextStyle(textDecoration = TextDecoration.LineThrough)),
-                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyLarge.plus(TextStyle(textDecoration = TextDecoration.LineThrough)),
+                color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
                     .padding(end = 8.dp)
+                    .align(Alignment.CenterVertically)
             )
         }
         Text(
             text = formatPrice(pricingInformation.price, preferredCurrencyCode),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineMedium,
+            color = colorResource(id = R.color.price_highlight),
             modifier = Modifier
         )
     }

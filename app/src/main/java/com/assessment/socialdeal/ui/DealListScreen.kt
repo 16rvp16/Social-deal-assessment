@@ -130,7 +130,7 @@ private fun DealListScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inverseOnSurface)
+                .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
             if (dealUiState.currentNavigationItem == NavigationItem.Preferences) {
                 PreferencesContent(
@@ -188,7 +188,7 @@ fun PreferredCurrencyPreference(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
-                    .padding(end = 8.dp)
+                    .padding(horizontal = 8.dp)
                     .align(Alignment.CenterVertically)
                     .weight(1f)
             )
@@ -269,24 +269,37 @@ fun DealListContent(
 
     when (dealUiState.dealListDataRequestState) {
         DataRequestState.Success -> {
-            LazyColumn(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensionResource(R.dimen.deal_list_item_vertical_spacing)
-                )
-            ) {
-                items(items = dealList, key = { deal -> deal.unique }) { deal ->
-                    DealListItem(
-                        dealUiState = dealUiState,
-                        deal = deal,
-                        selected = false,
-                        onCardClicked = {
-                            onDealCardPressed(deal)
-                        },
-                        onFavoriteToggled = { favorite ->
-                            onDealFavoriteToggled(deal, favorite)
-                        }
+            if (dealUiState.currentNavigationItem == NavigationItem.Favorites && dealList.isEmpty()) {
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "You don't have favorites yet",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
                     )
+                }
+            } else {
+                LazyColumn(
+                    modifier = modifier,
+                    verticalArrangement = Arrangement.spacedBy(
+                        dimensionResource(R.dimen.deal_list_item_vertical_spacing)
+                    )
+                ) {
+                    items(items = dealList, key = { deal -> deal.unique }) { deal ->
+                        DealListItem(
+                            dealUiState = dealUiState,
+                            deal = deal,
+                            onCardClicked = {
+                                onDealCardPressed(deal)
+                            },
+                            onFavoriteToggled = { favorite ->
+                                onDealFavoriteToggled(deal, favorite)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -298,7 +311,12 @@ fun DealListContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CircularProgressIndicator()
-                Text(text = "Op zoek naar deals", textAlign = TextAlign.Center)
+                Text(
+                    text = "Op zoek naar deals",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 
@@ -311,10 +329,16 @@ fun DealListContent(
                 Text(
                     text = "Er is iets mis gegaan bij het ophalen van de deals",
                     modifier = Modifier.padding(bottom = 8.dp),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Button(onClick = onLoadDealsPressed) {
-                    Text(text = "Opnieuw zoeken")
+                    Text(
+                        text = "Opnieuw zoeken",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
                 }
             }
         }
@@ -325,7 +349,6 @@ fun DealListContent(
 fun DealListItem(
     dealUiState: DealUiState,
     deal: Deal,
-    selected: Boolean,
     onCardClicked: () -> Unit,
     onFavoriteToggled: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -333,10 +356,7 @@ fun DealListItem(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = if (selected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.inverseOnSurface
         ),
         onClick = onCardClicked
     ) {

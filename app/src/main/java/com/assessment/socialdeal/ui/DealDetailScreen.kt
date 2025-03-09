@@ -110,7 +110,12 @@ fun DealDetailScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 CircularProgressIndicator()
-                                Text(text = "Retrieving details", textAlign = TextAlign.Center)
+                                Text(
+                                    text = "Retrieving details",
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                         }
 
@@ -125,10 +130,16 @@ fun DealDetailScreen(
                                 Text(
                                     text = "Something went wrong while retrieving details",
                                     modifier = Modifier.padding(bottom = 8.dp),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center
                                 )
                                 Button(onClick = { onLoadDetailsPressed(deal) }) {
-                                    Text(text = "Retry")
+                                    Text(
+                                        text = "Retry",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSecondary
+                                    )
                                 }
                             }
                         }
