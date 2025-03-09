@@ -45,7 +45,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.CurrencyCode
@@ -188,14 +187,14 @@ fun PreferredCurrencyPreference(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = dimensionResource(id = R.dimen.text_padding))
                     .align(Alignment.CenterVertically)
                     .weight(1f)
             )
             ExposedDropdownMenuBox(
                 expanded = currencyMenuOpened,
                 onExpandedChange = { currencyMenuOpened = it },
-                modifier = Modifier.width(200.dp)
+                modifier = Modifier.width(dimensionResource(id = R.dimen.preference_drop_down_width))
             ) {
                 TextField(
                     modifier = Modifier.menuAnchor(),
@@ -328,7 +327,7 @@ fun DealListContent(
             ) {
                 Text(
                     text = stringResource(R.string.retreive_details_error_message),
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.text_padding)),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,

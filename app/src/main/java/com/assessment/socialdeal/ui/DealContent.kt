@@ -27,12 +27,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImagePainter
 import coil3.compose.AsyncImagePainter.State.Error
@@ -63,21 +63,24 @@ fun DealSummary(
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
-                .padding(top = 12.dp, bottom = 12.dp),
+                .padding(
+                    top = dimensionResource(id = R.dimen.text_padding_large),
+                    bottom = dimensionResource(id = R.dimen.text_padding_large)
+                ),
         )
         Text(
             text = deal.company,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
-                .padding(bottom = 4.dp),
+                .padding(bottom = dimensionResource(id = R.dimen.text_padding_small)),
         )
         Text(
             text = deal.city,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
-                .padding(bottom = 8.dp),
+                .padding(bottom = dimensionResource(id = R.dimen.text_padding)),
         )
         Row(
             horizontalArrangement = End,
@@ -114,7 +117,7 @@ fun DealPricingLabels(
                 style = MaterialTheme.typography.bodyLarge.plus(TextStyle(textDecoration = TextDecoration.LineThrough)),
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
-                    .padding(end = 8.dp)
+                    .padding(end = dimensionResource(id = R.dimen.text_padding))
                     .align(Alignment.CenterVertically)
             )
         }
@@ -178,7 +181,10 @@ fun DealImage(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .requiredHeightIn(min = 50.dp, max = 250.dp)
+            .requiredHeightIn(
+                min = dimensionResource(id = R.dimen.deal_image_min_height),
+                max = dimensionResource(id = R.dimen.deal_image_max_height)
+            )
             .zIndex(-1f)
     ) {
         Image(
@@ -188,7 +194,7 @@ fun DealImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .conditional(roundedCorners, {
-                    clip(RoundedCornerShape(size = 16.dp))
+                    clip(RoundedCornerShape(size = dimensionResource(id = R.dimen.deal_image_corner_radius)))
                 })
         )
         when (painterState.value) {
@@ -203,7 +209,7 @@ fun DealImage(
                 contentDescription = stringResource(R.string.load_image_error_description),
                 modifier = Modifier
                     .align(alignment = Alignment.Center)
-                    .size(size = 50.dp)
+                    .size(size = dimensionResource(id = R.dimen.deal_image_min_height))
             )
 
             else -> {}

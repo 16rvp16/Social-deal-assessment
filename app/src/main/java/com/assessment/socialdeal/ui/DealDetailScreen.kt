@@ -22,11 +22,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.Deal
@@ -89,7 +89,7 @@ fun DealDetailScreen(
                     DealSummary(
                         dealUiState = dealUiState,
                         deal = deal,
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.deal_details_content_padding))
                     )
 
                     when (dealUiState.dealDetailsDataRequestState) {
@@ -97,14 +97,14 @@ fun DealDetailScreen(
                             DealDetailsContent(
                                 dealUiState = dealUiState, modifier = modifier
                                     .fillMaxWidth()
-                                    .padding(20.dp)
+                                    .padding(dimensionResource(id = R.dimen.deal_details_content_padding))
                             )
                         }
 
                         DataRequestState.Loading -> {
                             Column(
                                 modifier = Modifier
-                                    .padding(top = 24.dp)
+                                    .padding(top = dimensionResource(id = R.dimen.deal_details_network_message_top_padding))
                                     .fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -122,14 +122,14 @@ fun DealDetailScreen(
                         DataRequestState.Failure -> {
                             Column(
                                 modifier = Modifier
-                                    .padding(top = 24.dp)
+                                    .padding(top = dimensionResource(id = R.dimen.deal_details_network_message_top_padding))
                                     .fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
                                     text = stringResource(R.string.retrieving_details_error_message),
-                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.text_padding)),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center
@@ -166,7 +166,7 @@ private fun DealDetailsContent(
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier
                 .padding(
-                    vertical = 12.dp,
+                    vertical = dimensionResource(id = R.dimen.deal_details_description_vertical_padding),
                 )
         )
     }
