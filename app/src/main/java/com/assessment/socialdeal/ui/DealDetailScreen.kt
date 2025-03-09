@@ -1,7 +1,9 @@
 package com.assessment.socialdeal.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,11 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.graphics.drawable.IconCompat
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.Deal
@@ -64,11 +68,17 @@ fun DealDetailScreen(
         ) {
             item {
                 dealUiState.currentSelectedDeal?.let { deal ->
-                    DealHeader(
-                        dealUiState = dealUiState,
-                        deal = deal,
-                        imageHasRoundedCorners = false,
-                        onFavoriteToggled = { favorite -> onDealFavoriteToggled(deal, favorite) })
+                    DealImage(deal = deal, roundedCorners = false) {
+                        DealFavoriteToggleButton(
+                            dealUiState = dealUiState,
+                            deal = deal,
+                            onFavoriteToggled = { favorite -> onDealFavoriteToggled(deal, favorite) },
+                            modifier = Modifier
+                                .align(alignment = Alignment.BottomEnd)
+                                .zIndex(1f)
+                        )
+                    }
+                    DealSummary(dealUiState = dealUiState, deal = deal, modifier = Modifier.padding(20.dp))
                     DealDetailsContent(
                         dealUiState = dealUiState, modifier = modifier
                             .fillMaxWidth()

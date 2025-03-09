@@ -2,6 +2,7 @@ package com.assessment.socialdeal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.CurrencyCode
 import com.assessment.socialdeal.model.Deal
@@ -293,14 +295,25 @@ fun DealListItem(
         ),
         onClick = onCardClicked
     ) {
-        DealHeader(
-            dealUiState = dealUiState,
-            deal = deal,
-            onFavoriteToggled = onFavoriteToggled,
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.deal_list_item_padding))
         )
+        {
+            DealImage(deal = deal, roundedCorners = true) {
+                DealFavoriteToggleButton(
+                    dealUiState = dealUiState,
+                    deal = deal,
+                    onFavoriteToggled = onFavoriteToggled,
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .zIndex(1f)
+                )
+            }
+            DealSummary(dealUiState = dealUiState, deal = deal)
+        }
     }
 }
 

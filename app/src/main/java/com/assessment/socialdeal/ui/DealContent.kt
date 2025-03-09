@@ -3,6 +3,7 @@ package com.assessment.socialdeal.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,32 +47,15 @@ import com.assessment.socialdeal.utils.conditional
 import com.assessment.socialdeal.utils.formatPrice
 
 @Composable
-fun DealHeader(
+fun DealSummary(
     dealUiState: DealUiState,
     deal: Deal,
-    imageHasRoundedCorners: Boolean = true,
-    onFavoriteToggled: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     )
     {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            DealImage(deal = deal, roundedCorners = imageHasRoundedCorners) {
-                DealFavoriteToggleButton(
-                    dealUiState = dealUiState,
-                    deal = deal,
-                    onFavoriteToggled = onFavoriteToggled,
-                    modifier = Modifier
-                        .align(alignment = Alignment.BottomEnd)
-                        .zIndex(1f)
-                )
-            }
-        }
         Text(
             text = deal.title,
             style = MaterialTheme.typography.headlineMedium,
@@ -175,7 +159,7 @@ fun DealFavoriteToggleButton(
 fun DealImage(
     deal: Deal,
     roundedCorners: Boolean = true,
-    imageOverlay: @Composable (AsyncImagePainter.State) -> Unit = { }
+    imageOverlay: @Composable BoxScope.(AsyncImagePainter.State) -> Unit = { }
 ) {
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
