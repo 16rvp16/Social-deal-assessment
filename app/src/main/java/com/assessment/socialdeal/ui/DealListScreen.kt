@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -16,9 +17,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
@@ -26,6 +28,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -33,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -118,7 +122,12 @@ private fun DealListScreenContent(
             if (dealUiState.currentNavigationItem == NavigationItem.Preferences) {
                 PreferencesContent(
                     dealUiState = dealUiState,
-                    onPreferredCurrencyChanged = onPreferredCurrencyChanged
+                    onPreferredCurrencyChanged = onPreferredCurrencyChanged,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(
+                            horizontal = dimensionResource(R.dimen.deal_list_padding)
+                        )
                 )
             } else {
                 DealListContent(
@@ -142,57 +151,96 @@ fun PreferencesContent(
     onPreferredCurrencyChanged: (CurrencyCode) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var menuOpened by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier,
+        modifier = modifier,
     ) {
-        Card(onClick = { menuOpened = true }) {
-            Row(modifier = modifier) {
-                Text(
-                    text = "Valuta",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .weight(1f)
+        PreferredCurrencyPreference(dealUiState = dealUiState, onPreferredCurrencyChanged)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PreferredCurrencyPreference(
+    dealUiState: DealUiState,
+    onPreferredCurrencyChanged: (CurrencyCode) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var currencyMenuOpened by remember { mutableStateOf(false) }
+    Card(modifier = modifier) {
+        Row {
+            Text(
+                text = "Munteenheid",
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .align(Alignment.CenterVertically)
+                    .weight(1f)
+            )
+            ExposedDropdownMenuBox(
+                expanded = currencyMenuOpened,
+                onExpandedChange = { currencyMenuOpened = it },
+                modifier = Modifier.width(200.dp)
+            ) {
+                TextField(
+                    modifier = Modifier.menuAnchor(),
+                    value = dealUiState.preferredCurrency.commonName,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = currencyMenuOpened) },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
                 )
-                Text(
-                    text = dealUiState.preferredCurrency.symbol,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                )
-            }
-            DropdownMenu(expanded = menuOpened, onDismissRequest = { menuOpened = false }) {
-                DropdownMenuItem(
-                    text = { Text(text = "Euro") },
-                    onClick = {
-                        menuOpened = false
-                        onPreferredCurrencyChanged(CurrencyCode.Euro)
-                    },
-                    modifier =
-                    Modifier.background(
-                        if (CurrencyCode.Euro == dealUiState.preferredCurrency) MaterialTheme.colorScheme.secondaryContainer
-                        else Color.Transparent
-                    ),
-                    colors = MenuDefaults.itemColors(),
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "Dollar") },
-                    onClick = {
-                        menuOpened = false
-                        onPreferredCurrencyChanged(CurrencyCode.Dollar)
-                    },
-                    modifier =
-                    Modifier.background(
-                        if (CurrencyCode.Dollar == dealUiState.preferredCurrency) MaterialTheme.colorScheme.secondaryContainer
-                        else Color.Transparent
-                    ),
-                    colors = MenuDefaults.itemColors(),
-                )
+                ExposedDropdownMenu(
+                    modifier = Modifier.exposedDropdownSize(matchTextFieldWidth = true),
+                    expanded = currencyMenuOpened,
+                    onDismissRequest = { currencyMenuOpened = false },
+                ) {
+                    CurrencyCodeDropDownMenuItem(
+                        dealUiState = dealUiState,
+                        currencyCode = CurrencyCode.Euro
+                    ) { currencyCode ->
+                        currencyMenuOpened = false
+                        onPreferredCurrencyChanged(currencyCode)
+                    }
+                    CurrencyCodeDropDownMenuItem(
+                        dealUiState = dealUiState,
+                        currencyCode = CurrencyCode.USDollar
+                    ) { currencyCode ->
+                        currencyMenuOpened = false
+                        onPreferredCurrencyChanged(currencyCode)
+                    }
+                }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CurrencyCodeDropDownMenuItem(
+    dealUiState: DealUiState,
+    currencyCode: CurrencyCode,
+    onCurrencySelected: (CurrencyCode) -> Unit,
+) {
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = currencyCode.commonName,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        onClick = {
+            onCurrencySelected(currencyCode)
+        },
+        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+        modifier =
+        Modifier.background(
+            if (currencyCode == dealUiState.preferredCurrency) MaterialTheme.colorScheme.secondaryContainer
+            else Color.Transparent
+        ),
+        colors = MenuDefaults.itemColors(),
+    )
 }
 
 @Composable

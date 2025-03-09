@@ -12,18 +12,18 @@ data class Currency(
 )
 
 @Serializable
-enum class CurrencyCode(val symbol: String, val code: String) {
+enum class CurrencyCode(val symbol: String, val code: String, val commonName: String) {
     @SerialName("EUR")
-    Euro(symbol = "€", "EUR"),
+    Euro(symbol = "€", "EUR", "Euro"),
 
     @SerialName("USD")
-    Dollar(symbol = "$", "USD");
+    USDollar(symbol = "$", "USD", "US Dollar");
 
     companion object {
         fun parseCode(code: String?): CurrencyCode {
             return when (code) {
                 Euro.code -> Euro
-                Dollar.code -> Dollar
+                USDollar.code -> USDollar
                 else -> Euro
             }
         }
@@ -43,14 +43,14 @@ enum class CurrencyCode(val symbol: String, val code: String) {
             Euro -> {
                 when (currencyCode) {
                     Euro -> 1.0
-                    Dollar -> EUR_TO_USD_EXCHANGE_RATE
+                    USDollar -> EUR_TO_USD_EXCHANGE_RATE
                 }
             }
 
-            Dollar -> {
+            USDollar -> {
                 when (currencyCode) {
                     Euro -> 1 / EUR_TO_USD_EXCHANGE_RATE
-                    Dollar -> 1.0
+                    USDollar -> 1.0
                 }
             }
         }

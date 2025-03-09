@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.IconCompat
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.Deal
 
