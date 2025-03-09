@@ -49,8 +49,14 @@ import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.CurrencyCode
 import com.assessment.socialdeal.model.Deal
-import com.assessment.socialdeal.model.NavigationItem
 
+/**
+ * Composes a screen with a bottom tab navigation bar
+ * The following tabs are included:
+ * - A list of all [Deal]
+ * - A list of all favorite [Deal]
+ * - User preferences
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DealListScreen(
@@ -87,6 +93,7 @@ fun DealListScreen(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
                 title = {
+                    // The title of the top AppBar changes based on the currently selected tab
                     Text(
                         if (dealUiState.currentNavigationItem == NavigationItem.Preferences) {
                             stringResource(R.string.settings_navigation_title)
@@ -116,6 +123,9 @@ fun DealListScreen(
     }
 }
 
+/**
+ * Composes the current screen content based on the selected tab
+ */
 @Composable
 private fun DealListScreenContent(
     dealUiState: DealUiState,
@@ -158,6 +168,9 @@ private fun DealListScreenContent(
     }
 }
 
+/**
+ * Composes the screen content for when the preferences tab is opened
+ */
 @Composable
 fun PreferencesContent(
     dealUiState: DealUiState,
@@ -171,6 +184,10 @@ fun PreferencesContent(
     }
 }
 
+/**
+ * Composes a Card that contains a interactive preference that allows the user to select a preferred
+ * currency
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreferredCurrencyPreference(
@@ -178,6 +195,7 @@ fun PreferredCurrencyPreference(
     onPreferredCurrencyChanged: (CurrencyCode) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // We need to remember the current state of the dropdown menu
     var currencyMenuOpened by remember { mutableStateOf(false) }
     Card(modifier = modifier) {
         Row {
@@ -229,6 +247,9 @@ fun PreferredCurrencyPreference(
     }
 }
 
+/**
+ * Composes a Dropdown menu item for a given [CurrencyCode]
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyCodeDropDownMenuItem(
@@ -256,6 +277,9 @@ fun CurrencyCodeDropDownMenuItem(
     )
 }
 
+/**
+ * Composes a list of [Deal] based on the currently selected tab
+ */
 @Composable
 fun DealListContent(
     dealUiState: DealUiState,
@@ -266,8 +290,13 @@ fun DealListContent(
 ) {
     val dealList = dealUiState.currentDealList
 
+    // Switches upon the current state of the request that loads all deals
+    // If the request is still in progress or has failed, we will communicate that to the user
+    // otherwise we display the list of [Deal]
     when (dealUiState.dealListDataRequestState) {
         DataRequestState.Success -> {
+            // If the favorites tab has been selected, and there are no favorites yet
+            // we will display a message to inform the user that they don't have any favorites yet
             if (dealUiState.currentNavigationItem == NavigationItem.Favorites && dealList.isEmpty()) {
                 Box(
                     modifier = modifier.fillMaxSize(),
@@ -344,6 +373,9 @@ fun DealListContent(
     }
 }
 
+/**
+ * Composes a Card that contains a image an summary information for a given [Deal]
+ */
 @Composable
 fun DealListItem(
     dealUiState: DealUiState,
@@ -381,6 +413,9 @@ fun DealListItem(
     }
 }
 
+/**
+ * Composes the bottom navigation bar for the DealList screen
+ */
 @Composable
 private fun DealBottomNavigationBar(
     currentTab: NavigationItem,

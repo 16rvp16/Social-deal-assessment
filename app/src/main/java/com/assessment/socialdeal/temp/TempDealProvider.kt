@@ -6,6 +6,7 @@ import com.assessment.socialdeal.model.Deal
 import com.assessment.socialdeal.model.Price
 import com.assessment.socialdeal.model.PricingInformation
 
+//TODO delete this class
 object TempDealProvider {
 
     val allDeals = listOf(

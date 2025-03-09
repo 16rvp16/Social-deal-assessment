@@ -1,4 +1,4 @@
-package com.assessment.socialdeal.model
+package com.assessment.socialdeal.ui
 
 /**
  * An enum class to define different bottom bar navigation items.

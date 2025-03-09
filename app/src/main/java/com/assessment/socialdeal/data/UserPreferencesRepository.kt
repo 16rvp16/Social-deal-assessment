@@ -22,9 +22,12 @@ class DataStoreUserPreferencesRepository(
 ) : UserPreferencesRepository {
     private companion object {
         val PREFERRED_CURRENCY = stringPreferencesKey("preferredCurrency")
-        const val TAG = "UserPreferencesRepo"
+        const val TAG = "DataStoreUserPreferencesRepository"
     }
 
+    /**
+     * Uses the [DataStore] to get a [Flow] of the preferred [CurrencyCode]
+     */
     override val preferredCurrency: Flow<CurrencyCode> = dataStore.data
         .catch {
             if (it is IOException) {
@@ -38,6 +41,9 @@ class DataStoreUserPreferencesRepository(
             CurrencyCode.parseCode(preferences[PREFERRED_CURRENCY])
         }
 
+    /**
+     * Uses the [DataStore] to save a [CurrencyCode] as the preferred Currency
+     */
     override suspend fun savePreferredCurrency(currencyCode: CurrencyCode) {
         dataStore.edit { preferences ->
             preferences[PREFERRED_CURRENCY] = currencyCode.code

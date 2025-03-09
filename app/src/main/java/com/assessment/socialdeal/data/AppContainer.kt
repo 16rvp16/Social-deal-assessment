@@ -1,10 +1,7 @@
 package com.assessment.socialdeal.data
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.assessment.socialdeal.network.DealsApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -17,14 +14,14 @@ interface AppContainer {
 }
 
 /**
- * Implementation for the Dependency Injection container at the application level.
+ * Manual Dependency Injection container at the application level.
  */
 class DefaultAppContainer(val dataStore: DataStore<Preferences>) : AppContainer {
-    private val baseUrl = "https://media.socialdeal.nl/demo/"
+    private val baseApiUrl = "https://media.socialdeal.nl/demo/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(baseUrl)
+        .baseUrl(baseApiUrl)
         .build()
 
     private val dealsApiService: DealsApiService by lazy {
@@ -34,6 +31,7 @@ class DefaultAppContainer(val dataStore: DataStore<Preferences>) : AppContainer 
     override val dealsRepository: DealsRepository by lazy {
         NetworkDealsRepository(dealsApiService)
     }
+
     override val userPreferencesRepository: UserPreferencesRepository by lazy {
         DataStoreUserPreferencesRepository(dataStore)
     }

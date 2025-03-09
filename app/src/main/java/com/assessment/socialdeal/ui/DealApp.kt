@@ -12,6 +12,7 @@ fun DealApp(
     val viewModel: DealViewModel = viewModel(factory = DealViewModel.Factory)
     val dealUiState = viewModel.uiState.collectAsState().value
 
+    //Switch between detail and list screens
     if (dealUiState.isShowingDealDetails) {
         DealDetailScreen(
             dealUiState = dealUiState,

@@ -31,6 +31,9 @@ import androidx.compose.ui.zIndex
 import com.assessment.socialdeal.R
 import com.assessment.socialdeal.model.Deal
 
+/**
+ * Composes the detail screen
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DealDetailScreen(
@@ -41,6 +44,7 @@ fun DealDetailScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(topBar = {
+        // The top AppBar contains a button to navigate back to the list screen
         TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
@@ -62,7 +66,7 @@ fun DealDetailScreen(
 
     }, modifier = modifier)
     { contentPadding ->
-
+        // The content of the screen exist out of a image, deal summary information and a detailed text
         LazyColumn(
             contentPadding = contentPadding,
             modifier = Modifier
@@ -92,6 +96,9 @@ fun DealDetailScreen(
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.deal_details_content_padding))
                     )
 
+                    // Switch on the current state of the request that fetches the detailed information
+                    // When the we are loading or the request fails we notify the user
+                    // Otherwise we show the details
                     when (dealUiState.dealDetailsDataRequestState) {
                         DataRequestState.Success -> {
                             DealDetailsContent(
@@ -150,6 +157,9 @@ fun DealDetailScreen(
     }
 }
 
+/**
+ * Composes the detail contents of the currently selected [Deal]
+ */
 @Composable
 private fun DealDetailsContent(
     dealUiState: DealUiState,

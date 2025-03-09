@@ -13,6 +13,9 @@ interface DealsRepository {
 
 class NetworkDealsRepository(private val dealsApiService: DealsApiService) : DealsRepository {
 
+    /**
+     * Uses the [DealsApiService] to retrieve a list of [Deal]
+     */
     override suspend fun getDeals(): DataResult<DealsPage> {
 
         return try {
@@ -24,6 +27,9 @@ class NetworkDealsRepository(private val dealsApiService: DealsApiService) : Dea
         }
     }
 
+    /**
+     * Uses the [DealsApiService] to retrieve details for the specified [Deal]
+     */
     override suspend fun getDetails(deal: Deal): DataResult<Deal> {
         return try {
             val dealDetails = dealsApiService.getDetails(deal.unique)

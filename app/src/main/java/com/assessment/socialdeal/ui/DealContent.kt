@@ -47,6 +47,10 @@ import com.assessment.socialdeal.model.PricingInformation
 import com.assessment.socialdeal.utils.conditional
 import com.assessment.socialdeal.utils.formatPrice
 
+/**
+ * Composes a Column that includes a summary of the given [Deal]
+ * The summery includes: Title, company, city, amount sold, original price and price
+ */
 @Composable
 fun DealSummary(
     dealUiState: DealUiState,
@@ -104,6 +108,11 @@ fun DealSummary(
     }
 }
 
+/**
+ * Composes a Row with [PricingInformation]
+ * The original price is displayed if present
+ * The current price is always displayed
+ */
 @Composable
 fun DealPricingLabels(
     pricingInformation: PricingInformation,
@@ -131,6 +140,10 @@ fun DealPricingLabels(
     }
 }
 
+
+/**
+ * Composes an button that represents the current favorite state of the given [Deal]
+ */
 @Composable
 fun DealFavoriteToggleButton(
     dealUiState: DealUiState,
@@ -164,12 +177,18 @@ fun DealFavoriteToggleButton(
     }
 }
 
+/**
+ * Composes the image for the given [Deal]
+ * @param imageOverlay A composable that is draw in a [BoxScope] on top of the image
+ */
 @Composable
 fun DealImage(
     deal: Deal,
     roundedCorners: Boolean = true,
     imageOverlay: @Composable BoxScope.(AsyncImagePainter.State) -> Unit = { }
 ) {
+    // Use a separate image painter so the we can easily respond to changes in the image state
+    // for redrawing
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(deal.prefixedImage)
@@ -197,6 +216,9 @@ fun DealImage(
                     clip(RoundedCornerShape(size = dimensionResource(id = R.dimen.deal_image_corner_radius)))
                 })
         )
+        // Switch on the current state of the image painter
+        // When it is loading we draw a progress indicator
+        // When it fails we draw a error icon
         when (painterState.value) {
             is Loading -> CircularProgressIndicator(
                 modifier = Modifier
@@ -214,6 +236,8 @@ fun DealImage(
 
             else -> {}
         }
+        // When the painter state is update we also have to redraw the overlay, to ensure that
+        // it is always on top
         imageOverlay(painterState.value)
     }
 }
